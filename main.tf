@@ -28,7 +28,7 @@ resource "aws_lb" "load_balancer" {
   name               = "loadbalancer"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = ["sg-0399e1b644cf8983a"]
+  security_groups    = ["sg-0f72fb49b5d8ffe51"]
   subnets            = ["subnet-024f0492d8241dfcb", "subnet-071e85a626ca32e82", "subnet-02f8fb042559ad80f"]
 
 }
@@ -44,11 +44,11 @@ resource "aws_lb_listener" "front_end" {
 }
 
 resource "aws_launch_configuration" "as_conf" {
-  name_prefix     = "terraform-lc-example-"
-  image_id        = "ami-0960de83329d12f2f"
+  name_prefix     = "instance-terraform"
+  image_id        = "ami-0c6ebbd55ab05f070"
   instance_type   = "t2.micro"
   key_name        = "wordpressMA"
-  security_groups = ["wordpressDocker"]
+  security_groups = ["sg-0f72fb49b5d8ffe51"]
   user_data       = "${file("init.sh")} "
   lifecycle {
     create_before_destroy = true
@@ -61,7 +61,7 @@ resource "aws_autoscaling_group" "bar" {
   target_group_arns    = [aws_lb_target_group.target_group.arn]
   min_size             = 1
   max_size             = 4
-  desired_capacity     = 1
+  desired_capacity     = 2
   availability_zones   = ["eu-west-3a", "eu-west-3b", "eu-west-3c"]
   lifecycle {
     create_before_destroy = true
