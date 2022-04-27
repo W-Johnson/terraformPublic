@@ -43,17 +43,7 @@ resource "aws_lb_listener" "front_end" {
 
 }
 
-resource "aws_launch_configuration" "as_conf" {
-  name_prefix     = "instance-terraform"
-  image_id        = "ami-0c6ebbd55ab05f070"
-  instance_type   = "t2.micro"
-  key_name        = "wordpressMA"
-  security_groups = ["sg-0f72fb49b5d8ffe51"]
-  user_data       = "${file("init.sh")} "
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+
 
 resource "aws_autoscaling_group" "bar" {
   name                 = "terraform-asg-example"
@@ -72,5 +62,21 @@ resource "aws_autoscaling_group" "bar" {
     propagate_at_launch = true
   }
 }
-
+data "template_file" "init" {
+  template = file("init.tpl")
+  vars = {
+    lb_dns = "${aws_lb.load_balancer.dns_name}"
+  }
+}
+resource "aws_launch_configuration" "as_conf" {
+  name_prefix     = "instance-terraform"
+  image_id        = "ami-0c6ebbd55ab05f070"
+  instance_type   = "t2.micro"
+  key_name        = "wordpressMA"
+  security_groups = ["sg-0f72fb49b5d8ffe51"]
+  user_data       = data.template_file.init.rendered
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
