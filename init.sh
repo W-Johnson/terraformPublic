@@ -1,16 +1,24 @@
 #!/bin/bash
+sudo apt-get update
+sudo apt-get install nfs-common -y
+sudo mkdir efs
+sudo mount -t nfs4 -o  nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-0ded9dd3c99f5e039.efs.eu-west-3.amazonaws.com:/ efs/
+echo export LB_DNS=${aws_lb.load_balancer.dns_name} >> /etc/profile
+echo export PIPI="CACA" >> /etc/profile
+echo export DB_PASSWORD="mypassword" >> /etc/profile
+cd home/ubuntu
+touch ${aws_lb.load_balancer.dns_name} olalala
 
-cd /home/ec2-user
-touch work
-yum update -y
-amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
-yum install -y httpd mariadb-server
-systemctl start httpd
-systemctl enable httpd
-usermod -a -G apache ec2-user
-chown -R ec2-user:apache /var/www
-chmod 2775 /var/www
-find /var/www -type d -exec chmod 2775 {} \;
-find /var/www -type f -exec chmod 0664 {} \;
-echo "Hello World!" > /var/www/html/index.html
-systemctl restart httpd
+#sudo apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg
+#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+#sudo apt-key fingerprint 0EBFCD88
+#sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+#sudo apt update
+#sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+#sudo usermod -aG docker $USER
+#sudo systemctl start docker.service
+#sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#sudo chmod +x /usr/local/bin/docker-compose
+#git clone https://github.com/W-Johnson/dockerComposeWordpress.git
+#cd dockerComposeWordpress
+#ssudo docker-compose up -d
