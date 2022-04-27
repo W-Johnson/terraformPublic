@@ -7,6 +7,7 @@ echo export LB_DNS=${lb_dns} >> /etc/profile
 
 cd home/ubuntu
 touch ${lb_dns} 
+
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common gnupg
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-key fingerprint 0EBFCD88
